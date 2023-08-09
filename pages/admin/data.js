@@ -74,7 +74,7 @@ const Dashboard = (props) => {
                     <mesh
                       rotation={[
                         deg2rad(params.pitch) * -1,
-                        deg2rad(params.yaw),
+                        0,
                         deg2rad(params.roll),
                       ]}
                       scale={[0.3, 0.3, 0.3]}
