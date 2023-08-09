@@ -1,0 +1,67 @@
+{
+  "name": "nextjs-argon-dashboard",
+  "version": "1.1.0",
+  "author": "Creative Tim",
+  "license": "MIT",
+  "homepage": "https://demos.creative-tim.com/nextjs-argon-dashboard/",
+  "description": "NextJS version of Argon Dashboard React by Creative Tim",
+  "bugs": {
+    "url": "https://github.com/creativetimofficial/nextjs-argon-dashboard/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/creativetimofficial/nextjs-argon-dashboard.git"
+  },
+  "scripts": {
+    "start": "next start",
+    "build": "next build",
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && rm -rf .next/ && rm -rf out/ && npm install && npm run dev",
+    "compile:scss": "node-sass --importer node_modules/node-sass-package-importer/dist/cli.js assets/scss/nextjs-argon-dashboard.scss assets/css/nextjs-argon-dashboard.css",
+    "minify:scss": "node-sass --importer node_modules/node-sass-package-importer/dist/cli.js assets/scss/nextjs-argon-dashboard.scss assets/css/nextjs-argon-dashboard.min.css --output-style compressed",
+    "map:scss": "node-sass --importer node_modules/node-sass-package-importer/dist/cli.js assets/scss/nextjs-argon-dashboard.scss assets/css/nextjs-argon-dashboard.css --source-map true",
+    "build:scss": "npm run compile:scss && npm run minify:scss && npm run map:scss",
+    "dev": "next dev -p 7575"
+  },
+  "dependencies": {
+    "7": "^0.0.1",
+    "@fortawesome/fontawesome-free": "5.15.2",
+    "@react-three/drei": "^9.80.1",
+    "@react-three/fiber": "^8.13.6",
+    "@reduxjs/toolkit": "^1.9.5",
+    "axios": "^1.4.0",
+    "bootstrap": "4.6.0",
+    "chart.js": "2.9.4",
+    "classnames": "2.2.6",
+    "dotenv-load": "^2.0.1",
+    "google-map-react": "^2.2.1",
+    "moment": "^2.29.2",
+    "next": "^12.1.5",
+    "next-auth": "^4.3.2",
+    "next-compose-plugins": "2.2.1",
+    "next-env": "^1.1.1",
+    "next-fonts": "1.4.0",
+    "next-images": "1.3.1",
+    "node-sass": "^7.0.1",
+    "node-sass-package-importer": "5.3.2",
+    "nouislider": "14.6.3",
+    "path": "0.12.7",
+    "react": "^18.0.0",
+    "react-chartjs-2": "2.11.1",
+    "react-copy-to-clipboard": "5.0.3",
+    "react-datetime": "3.0.4",
+    "react-dom": "^18.2.0",
+    "react-redux": "^7.2.8",
+    "react-three": "^0.9.7",
+    "reactstrap": "8.9.0",
+    "recoil": "^0.7.1",
+    "sass": "^1.64.2",
+    "sweetalert2": "^11.4.8",
+    "three": "^0.155.0",
+    "typescript": "^4.6.3",
+    "webpack": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.23",
+    "@types/react": "^18.0.3"
+  }
+}
