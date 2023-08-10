@@ -57,7 +57,7 @@ const Dashboard = (props) => {
               <CardHeader className="bg-transparent">
                 <Row className="align-items-center">
                   <div className="col">
-                    <h2 className="mb-0">3D</h2>
+                    <h2 className="mb-0">PLANE</h2>
                   </div>
                 </Row>
               </CardHeader>
@@ -65,6 +65,8 @@ const Dashboard = (props) => {
                 <Canvas
                   style={{
                     backgroundColor: "#ffffff",
+                    height: "50vh",
+                    width: "100%",
                   }}
                 >
                   <ambientLight intensity={1.25} />
@@ -77,7 +79,7 @@ const Dashboard = (props) => {
                         0,
                         deg2rad(params.roll),
                       ]}
-                      scale={[2, 2, 2]}
+                      scale={[1.7, 1.7, 1.7]}
                     >
                       <Model position={[0, 0, 0]} />
                     </mesh>
