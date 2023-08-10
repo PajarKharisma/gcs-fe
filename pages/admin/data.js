@@ -64,7 +64,7 @@ const Dashboard = (props) => {
               <CardBody>
                 <Canvas
                   style={{
-                    backgroundColor: "#111a21",
+                    backgroundColor: "#ffffff",
                   }}
                 >
                   <ambientLight intensity={1.25} />
@@ -77,7 +77,7 @@ const Dashboard = (props) => {
                         0,
                         deg2rad(params.roll),
                       ]}
-                      scale={[0.3, 0.3, 0.3]}
+                      scale={[2, 2, 2]}
                     >
                       <Model position={[0, 0, 0]} />
                     </mesh>
