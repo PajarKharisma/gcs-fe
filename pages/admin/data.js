@@ -18,13 +18,14 @@ import { Canvas } from "@react-three/fiber";
 import { Model } from "../../variables/plane";
 import { OrbitControls } from "@react-three/drei";
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
-const defaultProps = {
-  center: {
-    lat: -5.382349279620357,
-    lng: 105.25780516676973,
-  },
-  zoom: 11,
+const Marker = () => {
+  return (
+    <img
+      width={30}
+      src="https://upload.wikimedia.org/wikipedia/commons/1/17/Plane_icon_nose_up.svg"
+      alt=""
+    />
+  );
 };
 
 const Dashboard = (props) => {
@@ -104,14 +105,10 @@ const Dashboard = (props) => {
                     bootstrapURLKeys={{
                       key: "AIzaSyBN8sj3Luct3fZ0v4YT-jMUxO5ZqqaAAjQ",
                     }}
-                    defaultCenter={defaultProps.center}
-                    defaultZoom={defaultProps.zoom}
+                    center={{ lat: params.lat, lng: params.long }}
+                    defaultZoom={11}
                   >
-                    <AnyReactComponent
-                      lat={59.955413}
-                      lng={30.337844}
-                      text="My Marker"
-                    />
+                    <Marker lat={params.lat} lng={params.long} />
                   </GoogleMapReact>
                 </div>
               </CardBody>
