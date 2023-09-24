@@ -23,7 +23,7 @@ function Header({ params }) {
                           Altitude
                         </CardTitle>
                         <span className="h2 font-weight-bold mb-0">
-                          {params?.altitude}
+                          {params?.alt}
                         </span>
                       </div>
                       <Col className="col-auto">
