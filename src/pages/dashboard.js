@@ -12,6 +12,10 @@ import {
   Snackbar,
   Alert,
   Skeleton,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
   Divider,
 } from "@mui/material";
 import { fetchParam, setParam, gcsSlice } from "@/store/gcs";
@@ -43,6 +47,9 @@ const Dashboard = () => {
     message: "",
   });
 
+  const [smoothPitch, setSmoothPitch] = useState(0);
+  const [smoothRoll, setSmoothRoll] = useState(0);
+
   useEffect(() => {
     setInterval(() => {
       dispatch(fetchParam());
@@ -51,6 +58,28 @@ const Dashboard = () => {
 
   useEffect(() => {
     setParams(store.params);
+    const currentPitch = params?.pitch;
+    const currentRoll = params?.roll;
+    if (currentPitch > store?.params?.pitch) {
+      for (let i = currentPitch; i > store?.params?.pitch; i--) {
+        setSmoothPitch(i);
+      }
+    } else if (currentPitch < store?.params?.pitch) {
+      for (let i = currentPitch; i < store?.params?.pitch; i++) {
+        setSmoothPitch(i);
+      }
+    }
+
+    if (currentRoll > store?.params?.roll) {
+      for (let i = currentRoll; i > store?.params?.roll; i--) {
+        setSmoothRoll(i);
+      }
+    } else if (currentRoll < store?.params?.roll) {
+      for (let i = currentRoll; i < store?.params?.roll; i++) {
+        setSmoothRoll(i);
+      }
+    }
+    setSmoothRoll(store.params?.roll);
   }, [store.params]);
 
   useEffect(() => {
@@ -85,7 +114,10 @@ const Dashboard = () => {
   };
 
   const onConnectionChange = (e) => {
-    setConnectionFields({ [e.target.name]: e.target.value });
+    setConnectionFields({
+      ...connectionFields,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const onConnectionClear = () => {
@@ -141,17 +173,20 @@ const Dashboard = () => {
                   shrink: true,
                 }}
               />
-              <TextField
-                label="Enter Baudrate"
-                variant="standard"
-                fullWidth
-                value={connectionFields.baudrate}
-                name="baudrate"
-                onChange={onConnectionChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
+              <FormControl fullWidth>
+                <InputLabel id="baudrate-select-label">Baudrate</InputLabel>
+                <Select
+                  labelId="baudrate-select-label"
+                  id="baudrate-select"
+                  value={connectionFields.baudrate}
+                  label="Baudrate"
+                  onChange={onConnectionChange}
+                  name="baudrate"
+                >
+                  <MenuItem value={57600}>57600</MenuItem>
+                  <MenuItem value={115200}>115200</MenuItem>
+                </Select>
+              </FormControl>
               <Box
                 spacing={2}
                 sx={{
@@ -255,7 +290,7 @@ const Dashboard = () => {
                 <directionalLight intensity={7} position={[0, 10, 5]} />
                 <Suspense fallback={null}>
                   <mesh
-                    rotation={[(params?.pitch ?? 0) * -1, 0, params?.roll ?? 0]}
+                    rotation={[smoothPitch * -1, 0, smoothRoll ?? 0]}
                     scale={[0.025, 0.025, 0.025]}
                   >
                     <Model position={[0, 0, 0]} />
