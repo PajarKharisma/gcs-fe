@@ -20,9 +20,11 @@ import {
 } from "@mui/material";
 import { fetchParam, setParam, gcsSlice } from "@/store/gcs";
 import { Canvas } from "@react-three/fiber";
-import { Model } from "@/variables/drone";
+import { DroneModel } from "@/variables/drone";
+import { PlaneModel } from "@/variables/plane";
 import { OrbitControls } from "@react-three/drei";
 import dynamic from "next/dynamic";
+import useSocket from "@/utils/useSocket";
 
 const MapComponentWithNoSSR = dynamic(() => import("@/components/Map"), {
   ssr: false,
@@ -40,6 +42,7 @@ const Dashboard = () => {
   const [connectionFields, setConnectionFields] =
     useState(initConnectionFields);
   const [params, setParams] = useState(null);
+  const [model, setModel] = useState("drone");
 
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -47,40 +50,7 @@ const Dashboard = () => {
     message: "",
   });
 
-  const [smoothPitch, setSmoothPitch] = useState(0);
-  const [smoothRoll, setSmoothRoll] = useState(0);
-
-  useEffect(() => {
-    setInterval(() => {
-      dispatch(fetchParam());
-    }, 2000);
-  }, []);
-
-  useEffect(() => {
-    setParams(store.params);
-    const currentPitch = params?.pitch;
-    const currentRoll = params?.roll;
-    if (currentPitch > store?.params?.pitch) {
-      for (let i = currentPitch; i > store?.params?.pitch; i--) {
-        setSmoothPitch(i);
-      }
-    } else if (currentPitch < store?.params?.pitch) {
-      for (let i = currentPitch; i < store?.params?.pitch; i++) {
-        setSmoothPitch(i);
-      }
-    }
-
-    if (currentRoll > store?.params?.roll) {
-      for (let i = currentRoll; i > store?.params?.roll; i--) {
-        setSmoothRoll(i);
-      }
-    } else if (currentRoll < store?.params?.roll) {
-      for (let i = currentRoll; i < store?.params?.roll; i++) {
-        setSmoothRoll(i);
-      }
-    }
-    setSmoothRoll(store.params?.roll);
-  }, [store.params]);
+  const socket = useSocket();
 
   useEffect(() => {
     switch (store.setParam.status) {
@@ -126,10 +96,20 @@ const Dashboard = () => {
 
   const onConnect = () => {
     dispatch(setParam({ data: { ...connectionFields, app_connect: true } }));
+    if (socket) {
+      socket.emit("get_params", { connect: true });
+      socket.on("get_params", (data) => {
+        setParams(data);
+      });
+    }
   };
 
   const onDisconnect = () => {
     dispatch(setParam({ data: { app_connect: false } }));
+    if (socket) {
+      socket.off("get_params");
+      setParams({ ...params, app_connect: false });
+    }
   };
 
   return (
@@ -185,6 +165,20 @@ const Dashboard = () => {
                 >
                   <MenuItem value={57600}>57600</MenuItem>
                   <MenuItem value={115200}>115200</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl fullWidth>
+                <InputLabel id="baudrate-select-label">Model</InputLabel>
+                <Select
+                  labelId="model-select-label"
+                  id="model-select"
+                  value={model}
+                  label="Baudrate"
+                  onChange={(e) => setModel(e.target.value)}
+                  name="baudrate"
+                >
+                  <MenuItem value={"drone"}>Drone</MenuItem>
+                  <MenuItem value={"plane"}>Plane</MenuItem>
                 </Select>
               </FormControl>
               <Box
@@ -288,14 +282,25 @@ const Dashboard = () => {
               >
                 <ambientLight intensity={1} />
                 <directionalLight intensity={7} position={[0, 10, 5]} />
-                <Suspense fallback={null}>
-                  <mesh
-                    rotation={[smoothPitch * -1, 0, smoothRoll ?? 0]}
-                    scale={[0.025, 0.025, 0.025]}
-                  >
-                    <Model position={[0, 0, 0]} />
-                  </mesh>
-                </Suspense>
+                {model == "drone" ? (
+                  <Suspense fallback={null}>
+                    <mesh
+                      rotation={[params?.pitch * -1, 0, params?.roll ?? 0]}
+                      scale={[0.025, 0.025, 0.025]}
+                    >
+                      <DroneModel position={[0, 0, 0]} />
+                    </mesh>
+                  </Suspense>
+                ) : (
+                  <Suspense fallback={null}>
+                    <mesh
+                      rotation={[params?.pitch * -1, 0, params?.roll ?? 0]}
+                      scale={[1.75, 1.75, 1.75]}
+                    >
+                      <PlaneModel position={[0, 0, 0]} />
+                    </mesh>
+                  </Suspense>
+                )}
                 <OrbitControls />
               </Canvas>
             </Box>
