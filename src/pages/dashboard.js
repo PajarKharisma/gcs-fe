@@ -38,6 +38,7 @@ const Dashboard = () => {
     port: process.env.NEXT_PUBLIC_PORT,
     baudrate: process.env.NEXT_PUBLIC_BAUDRATE,
     app_connect: false,
+    drone_ip: rocess.env.NEXT_PUBLIC_DRONE_IP,
   };
   const [connectionFields, setConnectionFields] =
     useState(initConnectionFields);
@@ -125,10 +126,10 @@ const Dashboard = () => {
         }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <Box
               sx={{
-                minHeight: "35vh",
+                height: "41vh",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start", // Align items to the start of the vertical axis
@@ -148,6 +149,17 @@ const Dashboard = () => {
                 fullWidth
                 value={connectionFields.port}
                 name="port"
+                onChange={onConnectionChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <TextField
+                label="Enter Drone IP"
+                variant="standard"
+                fullWidth
+                value={connectionFields.drone_ip}
+                name="drone_ip"
                 onChange={onConnectionChange}
                 InputLabelProps={{
                   shrink: true,
@@ -218,10 +230,10 @@ const Dashboard = () => {
             </Box>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <Box
               sx={{
-                minHeight: "35vh",
+                height: "41vh",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start", // Align items to the start of the vertical axis
@@ -257,10 +269,10 @@ const Dashboard = () => {
             </Box>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <Box
               sx={{
-                minHeight: "50vh",
+                height: "41vh",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start", // Align items to the start of the vertical axis
@@ -276,7 +288,7 @@ const Dashboard = () => {
               <Canvas
                 style={{
                   backgroundColor: "#ffffff",
-                  height: "40vh",
+                  height: "25vh",
                   width: "100%",
                 }}
               >
@@ -305,10 +317,42 @@ const Dashboard = () => {
               </Canvas>
             </Box>
           </Grid>
-          <Grid item xs={6}>
+
+          {/* streaming */}
+          <Grid item xs={4}>
             <Box
               sx={{
-                minHeight: "50vh",
+                height: "50vh",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start", // Align items to the start of the vertical axis
+                // gap: 0,
+                margin: "0 auto",
+                padding: 2,
+                backgroundColor: "#fff",
+                boxShadow: 3,
+              }}
+            >
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                Streaming
+              </Typography>
+              <img
+                src={`http://${connectionFields.drone_ip}/video_feed`}
+                alt=""
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  maxHeight: "40vh",
+                }}
+              />
+            </Box>
+          </Grid>
+
+          {/* map */}
+          <Grid item xs={8}>
+            <Box
+              sx={{
+                height: "50vh",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start", // Align items to the start of the vertical axis
