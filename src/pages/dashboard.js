@@ -38,7 +38,7 @@ const Dashboard = () => {
     port: process.env.NEXT_PUBLIC_PORT,
     baudrate: process.env.NEXT_PUBLIC_BAUDRATE,
     app_connect: false,
-    drone_ip: rocess.env.NEXT_PUBLIC_DRONE_IP,
+    drone_ip: process.env.NEXT_PUBLIC_DRONE_IP,
   };
   const [connectionFields, setConnectionFields] =
     useState(initConnectionFields);
