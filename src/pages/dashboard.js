@@ -11,14 +11,13 @@ import {
   Button,
   Snackbar,
   Alert,
-  Skeleton,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
   Divider,
 } from "@mui/material";
-import { fetchParam, setParam, gcsSlice } from "@/store/gcs";
+import { setAntenaPos, resetAntenaPos, setParam, gcsSlice } from "@/store/gcs";
 import { Canvas } from "@react-three/fiber";
 import { DroneModel } from "@/variables/drone";
 import { PlaneModel } from "@/variables/plane";
@@ -39,6 +38,8 @@ const Dashboard = () => {
     baudrate: process.env.NEXT_PUBLIC_BAUDRATE,
     app_connect: false,
     drone_ip: process.env.NEXT_PUBLIC_DRONE_IP,
+    antena_port: process.env.NEXT_PUBLIC_ANTENA_PORT,
+    antena_baudrate: process.env.NEXT_PUBLIC_ANTENA_BAUDRATE,
   };
   const [connectionFields, setConnectionFields] =
     useState(initConnectionFields);
@@ -79,6 +80,60 @@ const Dashboard = () => {
     }
     dispatch(resetAllStatus());
   }, [store.setParam]);
+  
+  useEffect(() => {
+    switch (store?.setAntenaPos.status) {
+      case "loading":
+        setSnackbar({
+          open: true,
+          type: "info",
+          message: "Loading...",
+        });
+        break;
+      case "success":
+        setSnackbar({
+          open: true,
+          type: "success",
+          message: "Success",
+        });
+        break;
+      case "error":
+        setSnackbar({
+          open: true,
+          type: "error",
+          message: "Error",
+        });
+        break;
+    }
+    dispatch(resetAllStatus());
+  }, [store.setAntenaPos]);
+
+  useEffect(() => {
+    switch (store?.resetAntenaPos?.status) {
+      case "loading":
+        setSnackbar({
+          open: true,
+          type: "info",
+          message: "Loading...",
+        });
+        break;
+      case "success":
+        setSnackbar({
+          open: true,
+          type: "success",
+          message: "Success",
+        });
+        break;
+      case "error":
+        setSnackbar({
+          open: true,
+          type: "error",
+          message: "Error",
+        });
+        break;
+    }
+    dispatch(resetAllStatus());
+  }, [store.resetAntenaPos]);
 
   const onCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
@@ -113,6 +168,14 @@ const Dashboard = () => {
     }
   };
 
+  const onSetAntenaPosition = () => {
+    dispatch(setAntenaPos());
+  };
+
+  const onResetAntenaPosition = () => {
+    dispatch(resetAntenaPos());
+  }
+
   return (
     <Layout>
       <Paper
@@ -126,7 +189,7 @@ const Dashboard = () => {
         }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <Box
               sx={{
                 height: "41vh",
@@ -230,7 +293,79 @@ const Dashboard = () => {
             </Box>
           </Grid>
 
-          <Grid item xs={4}>
+          <Grid item xs={3}>
+            <Box
+              sx={{
+                height: "41vh",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start", // Align items to the start of the vertical axis
+                gap: 2,
+                margin: "0 auto",
+                padding: 2,
+                backgroundColor: "#fff",
+                boxShadow: 3,
+              }}
+            >
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                Antena
+              </Typography>
+              <TextField
+                label="Enter Antena Port"
+                variant="standard"
+                fullWidth
+                value={connectionFields.antena_port}
+                name="antena_port"
+                onChange={onConnectionChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <FormControl fullWidth>
+                <InputLabel id="baudrate-select-label">Antena Baudrate</InputLabel>
+                <Select
+                  labelId="baudrate-select-label"
+                  id="baudrate-select"
+                  value={connectionFields.antena_baudrate}
+                  label="Antena Baudrate"
+                  onChange={onConnectionChange}
+                  name="antena_baudrate"
+                >
+                  <MenuItem value={9600}>9600</MenuItem>
+                  <MenuItem value={57600}>57600</MenuItem>
+                  <MenuItem value={115200}>115200</MenuItem>
+                </Select>
+              </FormControl>
+              <Box
+                spacing={2}
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  gap: 2,
+                  width: "100%",
+                }}
+              >
+                <Button
+                  type="button"
+                  variant="contained"
+                  color="primary"
+                  onClick={onSetAntenaPosition}
+                >
+                  Set Position
+                </Button>
+                <Button
+                  type="button"
+                  variant="contained"
+                  color="error"
+                  onClick={onResetAntenaPosition}
+                >
+                  Reset Position
+                </Button>
+              </Box>
+            </Box>
+          </Grid>
+
+          <Grid item xs={3}>
             <Box
               sx={{
                 height: "41vh",
@@ -269,7 +404,7 @@ const Dashboard = () => {
             </Box>
           </Grid>
 
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <Box
               sx={{
                 height: "41vh",
